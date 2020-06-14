@@ -11,33 +11,31 @@ class WritableQueue(Queue):
         self.put(s)
 
 
-class StdoutCaptureProcess(multiprocessing.Process):
+class _BaseCaptureProcess(multiprocessing.Process):
     def __init__(self, target=None, name=None, args=(), kwargs={}):
         super().__init__(target=target, name=name, args=args, kwargs=kwargs)
         self._queue = WritableQueue(ctx=multiprocessing.get_context())
+
+    def get_output(self):
+        try:
+            return self._queue.get_nowait()
+        except Empty:
+            return None
+
+
+class StdoutCaptureProcess(_BaseCaptureProcess):
+    def __init__(self, target=None, name=None, args=(), kwargs={}):
+        super().__init__(target=target, name=name, args=args, kwargs=kwargs)
 
     def run(self):
         with contextlib.redirect_stdout(self._queue):
             super().run()
 
-    def get_output(self):
-        try:
-            return self._queue.get_nowait()
-        except Empty:
-            return None
 
-
-class StderrCaptureProcess(multiprocessing.Process):
+class StderrCaptureProcess(_BaseCaptureProcess):
     def __init__(self, target=None, name=None, args=(), kwargs={}):
         super().__init__(target=target, name=name, args=args, kwargs=kwargs)
-        self._queue = WritableQueue(ctx=multiprocessing.get_context())
 
     def run(self):
         with contextlib.redirect_stderr(self._queue):
             super().run()
-
-    def get_output(self):
-        try:
-            return self._queue.get_nowait()
-        except Empty:
-            return None
