@@ -12,4 +12,4 @@ Description: async_output_capture is a library of classes
 """
 from .async_output_capture import StderrCaptureProcess, StdoutCaptureProcess
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'

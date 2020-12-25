@@ -6,15 +6,11 @@ from multiprocessing.queues import Queue
 from queue import Empty
 
 
-class WritableQueue(Queue):
-    def write(self, s):
-        self.put(s)
-
-
 class _BaseCaptureProcess(multiprocessing.Process):
     def __init__(self, target=None, name=None, args=(), kwargs={}):
         super().__init__(target=target, name=name, args=args, kwargs=kwargs)
-        self._queue = WritableQueue(ctx=multiprocessing.get_context())
+        self._queue = Queue(ctx=multiprocessing.get_context())
+        setattr(self._queue, 'write', self._queue.put)
 
     def get_output(self):
         try:
