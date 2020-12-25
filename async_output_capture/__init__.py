@@ -10,6 +10,6 @@ Description: async_output_capture is a library of classes
              while capturing their output written to stdout and
              stderr in real time.
 """
-from .async_output_capture import StderrCaptureProcess, StdoutCaptureProcess
+from .async_output_capture import CaptureProcess
 
-__version__ = '0.1.1'
+__version__ = '0.2.0'
