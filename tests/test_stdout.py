@@ -116,3 +116,7 @@ class TestStdOutInstant(unittest.TestCase):
                 break
 
         self.assertEqual(outputs.splitlines(), ['{}. test'.format(i) for i in range(curr_output, 2000)])
+
+
+if __name__ == '__main__':
+    unittest.main()
